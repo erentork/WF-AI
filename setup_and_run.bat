@@ -1,7 +1,7 @@
 @echo off
 setlocal
 cd /d "%~dp0"
-title Warframe AI Asistani - Kurulum
+title WF-AI - Kurulum ve Baslatici
 
 set "PY="
 where py >nul 2>nul && set "PY=py -3"
@@ -31,8 +31,13 @@ if not exist ".venv\.installed" (
 
 if not exist "config.json" copy /y "config.example.json" "config.json" >nul
 
-echo [*] Asistan baslatiliyor... (sistem tepsisinde simgesi var)
-start "" ".venv\Scripts\pythonw.exe" "src\main.py"
+if not exist "WF-AI.exe" (
+  echo [*] WF-AI.exe uygulama dosyasi ve simgesi olusturuluyor...
+  ".venv\Scripts\python.exe" "src\build_exe.py"
+)
+
+echo [*] WF-AI baslatiliyor...
+start "" "WF-AI.exe"
 exit /b 0
 
 :fail

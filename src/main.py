@@ -80,7 +80,7 @@ class Controller(QObject):
         self._busy = True
         try:
             self._jpeg = grab_screen_jpeg(
-                int(self.cfg.get("monitor", 1)),
+                int(self.cfg.get("monitor", 0)),
                 int(self.cfg.get("max_capture_width", 1920)),
                 int(self.cfg.get("jpeg_quality", 85)),
             )
@@ -204,6 +204,25 @@ class Controller(QObject):
         config.save(self.cfg)
         self.window.reset_position()
 
+    def cycle_monitor(self):
+        screens = QApplication.screens()
+        if len(screens) <= 1:
+            self.sig_message.emit("Tek monitör algılandı.", "idle", 5)
+            return
+        cur = self.window.screen()
+        idx = screens.index(cur) if cur in screens else 0
+        next_idx = (idx + 1) % len(screens)
+        self.window.reset_position(next_idx)
+        self.save_position(self.window.x(), self.window.y())
+        # Keep monitor=0 (auto) so it always captures the active game/cursor screen
+        self.cfg["monitor"] = 0
+        config.save(self.cfg)
+        self.sig_message.emit(
+            f"🖥️ <b>Ekran #{next_idx + 1}</b> üzerine taşındı.<br>"
+            "<i>(Otomatik ekran algılama aktif: F9'a bastığında oyunun olduğu ekran okunur)</i>",
+            "idle", 7,
+        )
+
     def ask_api_key(self):
         key, ok = QInputDialog.getText(
             None, "Gemini API Anahtarı",
@@ -221,6 +240,9 @@ class Controller(QObject):
 
 
 def make_icon() -> QIcon:
+    ico_path = config.ROOT / "assets" / "wf-ai.ico"
+    if ico_path.exists():
+        return QIcon(str(ico_path))
     pm = QPixmap(64, 64)
     pm.fill(Qt.GlobalColor.transparent)
     p = QPainter(pm)
@@ -244,19 +266,31 @@ def single_instance_guard():
 
 def main():
     _mutex = single_instance_guard()  # noqa: F841 (keep handle alive)
+    try:
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("Tenno.WFAI.Overlay.1")
+        ctypes.windll.kernel32.SetConsoleTitleW("WF-AI")
+    except Exception:
+        pass
+
     app = QApplication(sys.argv)
     app.setQuitOnLastWindowClosed(False)
-    app.setApplicationName("Warframe AI Assistant")
+    app.setApplicationName("WF-AI")
+    app.setApplicationDisplayName("WF-AI")
+    app_icon = make_icon()
+    app.setWindowIcon(app_icon)
 
     cfg = config.load()
     window = OverlayWindow(cfg)
+    window.setWindowTitle("WF-AI")
+    window.setWindowIcon(app_icon)
     ctrl = Controller(cfg, window)
 
-    tray = QSystemTrayIcon(make_icon(), app)
-    tray.setToolTip(f"Warframe AI Asistanı — {cfg.get('hotkey')}: analiz, basılı tut: sesli soru")
+    tray = QSystemTrayIcon(app_icon, app)
+    tray.setToolTip(f"WF-AI — {cfg.get('hotkey')}: analiz, basılı tut: sesli soru")
     menu = QMenu()
     for text, fn in (
         ("🌍 Dünya Durumu", ctrl.toggle_world),
+        ("🖥️ Diğer Monitöre Taşı", ctrl.cycle_monitor),
         ("🔑 API Anahtarını Ayarla", ctrl.ask_api_key),
         ("📍 Konumu Sıfırla", ctrl.reset_position),
     ):

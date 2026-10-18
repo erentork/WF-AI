@@ -40,15 +40,18 @@ Pet ekranda ne gördüğüne göre otomatik olarak şekil ve renk değiştirir:
 
 ---
 
-## 🚀 İlk Kurulum ve Çalıştırma
-
-1. **Oyunu Çerçevesiz Moda Al:** Warframe ayarlarından ekran modunu **Borderless Fullscreen (Çerçevesiz Tam Ekran)** yap (Tam ekranda Windows diğer pencereleri arkaya atar).
-2. **Başlat:** Klasördeki **`setup_and_run.bat`** dosyasına çift tıkla.
+## ⚡ Kurulum ve Başlatma (Format Sonrası Dahil)
+1. **Oyunu Çerçevesiz Moda Al:** Warframe ayarlarından ekran modunu **Borderless Fullscreen (Çerçevesiz Tam Ekran)** yap.
+2. **Başlat (`WF-AI.exe` veya `setup_and_run.bat`):**
+   - Klasördeki mavi elmas simgeli **`WF-AI.exe`** (veya ilk kurulumda **`setup_and_run.bat`**) dosyasına çift tıkla.
+   - Eğer ilk kez açıyorsan (veya format sonrasıysa), otomatik olarak Python sanal ortamını (`.venv`) kurar ve `WF-AI.exe` uygulamasını başlatır.
+   - **Görev Yöneticisi (Task Manager):** Uygulama `python.exe` olarak değil, kendi özel simgesiyle doğrudan **`WF-AI` (`WF-AI.exe`)** olarak çalışır.
 3. **API Anahtarı:** İlk açılışta gelen pencereye ücretsiz [Google AI Studio](https://aistudio.google.com/apikey) anahtarını yapıştır.
 4. **Sistem Tepsisi (Saatin Yanı):** Sağ altta saatin yanındaki gizli simgeler (`^`) içinde **Mavi Elmas** ikonunu göreceksin. Ona sağ tıklayarak:
    - `🌍 Dünya Durumu`nu açabilir,
+   - `🖥️ Diğer Monitöre Taşı` ile çift monitör kullanıyorsan Pet'i tek tıkla diğer ekranın sağ üst köşesine ışınlayabilir (Ayrıca `F9`'a bastığında Warframe hangi monitördeyse otomatik o monitörü okur!),
    - `🔑 API Anahtarını Ayarla`yabilir,
-   - `📍 Konumu Sıfırla`yabilir (Pet ekran dışına kaçarsa sağ üste geri getirir),
+   - `📍 Konumu Sıfırla`yabilir,
    - `❌ Çıkış` ile asistanı tamamen kapatabilirsin.
 
 ---

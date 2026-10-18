@@ -258,8 +258,15 @@ class OverlayWindow(QWidget):
         else:
             self.reset_position()
 
-    def reset_position(self):
-        geo = QApplication.primaryScreen().availableGeometry()
+    def reset_position(self, screen_idx: int = -1):
+        screens = QApplication.screens()
+        if not screens:
+            return
+        if 0 <= screen_idx < len(screens):
+            scr = screens[screen_idx]
+        else:
+            scr = self.screen() or QApplication.primaryScreen()
+        geo = scr.availableGeometry()
         self.move(geo.right() - self.width() - 16, geo.top() + 40)
 
     def showEvent(self, e):

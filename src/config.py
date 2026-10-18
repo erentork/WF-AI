@@ -15,7 +15,7 @@ DEFAULTS = {
     "hotkey": "F9",
     "interact_key": "alt",
     "hold_threshold_ms": 350,
-    "monitor": 1,
+    "monitor": 0,
     "max_capture_width": 1920,
     "jpeg_quality": 85,
     "result_seconds": 25,
