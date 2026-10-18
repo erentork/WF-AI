@@ -212,3 +212,16 @@ WF-AI/
 ├── update.bat            # One-click git pull & rebuild script
 └── run_debug.bat         # Console mode launcher for debugging
 ```
+
+---
+
+## ⚖️ License & Legal Disclaimer / Yasal Uyarı
+
+- **License:** Distributed under the **[MIT License](LICENSE)**.
+- **Non-Affiliation & Trademarks:**
+  > **WF-AI** is an unofficial, open-source, fan-made community tool and is **not** affiliated with, endorsed, sponsored, or specifically approved by **Digital Extremes Ltd.**, **warframe.market**, or **Google LLC**.
+  > - *Warframe* and all associated names, terminology (Riven, Cephalon, Orokin, Prime, Ducats), and trademarks are the property of **Digital Extremes Ltd.** No proprietary game assets, textures, audio, or code from Warframe are included or distributed in this repository.
+  > - Live market pricing data is retrieved on-demand via the public **[warframe.market API](https://warframe.market/api_docs)** in compliance with their terms of use.
+  > - World state cycle data is retrieved via the community **[warframestat.us API](https://docs.warframestat.us/)**.
+  > - Use of this software is entirely at the user's own risk.
+
