@@ -116,6 +116,11 @@ class Controller(QObject):
             self.sig_message.emit(html_text, mode, int(self.cfg.get("result_seconds", 25)))
         except Exception as e:
             msg = str(e)
+            if "429" in msg or "RESOURCE_EXHAUSTED" in msg:
+                self.sig_message.emit(
+                    "<b>Ücretsiz kota doldu</b><br>Biraz bekleyip tekrar dene (ücret çıkmaz, sadece limit).",
+                    "error", 10)
+                return
             if len(msg) > 300:
                 msg = msg[:300] + "…"
             self.sig_message.emit(f"<b>Analiz başarısız</b><br>{esc(msg)}", "error", 12)

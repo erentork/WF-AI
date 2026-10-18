@@ -1,6 +1,6 @@
 {
   "gemini_api_key": "",
-  "model": "gemini-flash-latest",
+  "model": "gemini-3.7-flash",
   "thinking_budget": null,
   "hotkey": "F9",
   "interact_key": "alt",

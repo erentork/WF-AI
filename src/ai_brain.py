@@ -100,12 +100,39 @@ class AIBrain:
         if budget is not None:
             gen_cfg.thinking_config = types.ThinkingConfig(thinking_budget=int(budget))
 
-        resp = client.models.generate_content(
-            model=self.cfg.get("model") or "gemini-flash-latest",
-            contents=[types.Content(role="user", parts=parts)],
-            config=gen_cfg,
-        )
+        primary = self.cfg.get("model") or "gemini-3.7-flash"
+        fallback_models = [
+            primary,
+            "gemini-3.7-flash",
+            "gemini-3.6-flash",
+            "gemini-3.5-flash",
+            "gemini-3.5-flash-lite",
+            "gemini-3.1-flash-lite",
+            "gemini-3-flash-preview",
+            "gemini-flash-lite-latest",
+        ]
+        # Keep order without duplicates
+        models_to_try = list(dict.fromkeys(fallback_models))
+
+        resp = None
+        last_err = None
+        for mdl in models_to_try:
+            try:
+                resp = client.models.generate_content(
+                    model=mdl,
+                    contents=[types.Content(role="user", parts=parts)],
+                    config=gen_cfg,
+                )
+                break
+            except Exception as e:
+                last_err = e
+                emsg = str(e)
+                if any(code in emsg for code in ("429", "RESOURCE_EXHAUSTED", "404", "NOT_FOUND", "400", "INVALID_ARGUMENT", "503", "UNAVAILABLE")):
+                    continue
+                raise
         del parts  # drop image/audio references ASAP
+        if resp is None and last_err is not None:
+            raise last_err
 
         parsed = getattr(resp, "parsed", None)
         if isinstance(parsed, BaseModel):
