@@ -9,21 +9,21 @@
 
 # 🇬🇧 English Documentation
 
-**WF-AI** is an ultra-lightweight, zero-ban-risk, shape-shifting desktop Cephalon overlay assistant for **Warframe**. With a single hotkey (`F9`), it captures your active game monitor **100% in RAM (zero disk writes)**, automatically detects what screen you are on (**Riven Reroll/Card**, **Void Relic Reward Selection**, or **Arsenal Upgrade/Build**), morphs its visual geometry accordingly, and delivers instant advice powered by **Google Gemini Multimodal AI** and live **warframe.market v2** pricing.
+**WF-AI** is an ultra-lightweight, shape-shifting desktop Cephalon overlay assistant for **Warframe**. With a single hotkey (`F9`), it captures your active game monitor **100% in RAM (zero disk writes)**, automatically detects what screen you are on (**Riven Reroll/Card**, **Void Relic Reward Selection**, or **Arsenal Upgrade/Build**), morphs its visual geometry accordingly, and delivers instant advice powered by **Google Gemini Multimodal AI** and live **warframe.market v2** pricing.
 
 ---
 
-## ✨ Key Technical Highlights (Portfolio Overview)
+## Key Technical Highlights (Portfolio Overview)
 
-- **🛡️ 100% Safe / Zero Ban Risk (Complete Process Isolation):**
+- ** Complete Process Isolation:**
   - Does **not** read or write game memory (`ReadProcessMemory`), inject DLLs, hook DirectX/OpenGL, or simulate inputs/macros.
   - Uses standard Windows Desktop Duplication / GDI screen capture (identical to OBS or Discord screen sharing) and the native OS `RegisterHotKey` API (no low-level `WH_KEYBOARD_LL` hooks).
-- **⚡ 100% In-Memory Pipeline (Zero Disk Footprint):**
+- ** 100% In-Memory Pipeline (Zero Disk Footprint):**
   - Screenshots (`mss` / `Pillow` $\rightarrow$ `io.BytesIO` JPEG) and push-to-talk voice queries (`sounddevice` $\rightarrow$ `io.BytesIO` WAV) live strictly in RAM and are garbage-collected immediately after the API call. Nothing is ever saved to disk.
-- **🚀 Native In-Process `WF-AI.exe` Host:**
+- ** Native In-Process `WF-AI.exe` Host:**
   - Compiled via a custom C#/.NET P/Invoke host (`src/build_exe.py`) that dynamically locates `python3XX.dll` from `.venv/pyvenv.cfg` and executes `Py_Main` **in-process**.
   - Runs as a single native process (**`WF-AI` / `WF-AI.exe`**) in Windows Task Manager with its own multi-resolution diamond icon (`assets/wf-ai.ico`)—no separate `python.exe` or `pythonw.exe` child processes.
-- **🎨 Shape-Shifting 60 FPS Vector UI & 0% Idle CPU:**
+- ** Shape-Shifting 60 FPS Vector UI & 0% Idle CPU:**
   - Hardware-independent custom `QPainter` vector animations (`PyQt6`) that completely stop their timer in Idle mode (**0.0% CPU / GPU impact on FPS**).
   - **Ghost Click-Through Mode (`WS_EX_TRANSPARENT`):** Mouse clicks pass straight through the overlay into the game during combat. Hold `Alt` to interact, drag, or open the live World State panel.
 
@@ -50,7 +50,7 @@ sequenceDiagram
 
 ---
 
-## 🔑 API Requirement (Important for New Users)
+## API Requirement (Important for New Users)
 
 > [!IMPORTANT]
 > **Which AI API Key is required?**
@@ -66,7 +66,7 @@ sequenceDiagram
 
 ---
 
-## 🚀 Installation & Quick Start
+## Installation & Quick Start
 
 1. **Set Warframe to Borderless Fullscreen:** In Warframe settings (`Options -> Video -> Display Mode`), select **Borderless Fullscreen** so Windows allows overlays above the game.
 2. **Clone or Download the Repository:**
@@ -81,17 +81,17 @@ sequenceDiagram
 
 ---
 
-## ⌨️ Controls & Hotkeys
+## Controls & Hotkeys
 
 | Hotkey / Action | Function | Description |
 | :--- | :--- | :--- |
-| **`F9` (Tap)** | **🔍 Auto-Detect & Analyze** | Captures your active game screen in RAM, auto-detects **Riven**, **Relic**, or **Build**, morphs the pet, and shows advice. |
-| **`F9` (Hold + Speak)** | **🎙️ Push-to-Talk Voice Query** | Listens to your microphone while held (`DİNLİYOR... 🎙`). On release, sends **Screenshot + Voice** together. |
-| **`Alt + Left-Drag`** | **✋ Move Overlay** | Hold `Alt` and drag the pet anywhere on any monitor. Position is saved automatically. |
-| **`Alt + Left-Click (on Pet)`** | **🌍 Live World State** | Toggles live **Cetus (Day/Night)**, **Vallis**, **Cambion**, **Archon Hunt**, **Sortie**, **Steel Path**, and **Baro Ki'Teer** timers. |
-| **`Alt + Right-Click`** | **❌ Dismiss Bubble** | Immediately closes the active speech bubble and returns the pet to Idle mode. |
+| **`F9` (Tap)** | ** Auto-Detect & Analyze** | Captures your active game screen in RAM, auto-detects **Riven**, **Relic**, or **Build**, morphs the pet, and shows advice. |
+| **`F9` (Hold + Speak)** | ** Push-to-Talk Voice Query** | Listens to your microphone while held (`DİNLİYOR... 🎙`). On release, sends **Screenshot + Voice** together. |
+| **`Alt + Left-Drag`** | ** Move Overlay** | Hold `Alt` and drag the pet anywhere on any monitor. Position is saved automatically. |
+| **`Alt + Left-Click (on Pet)`** | ** Live World State** | Toggles live **Cetus (Day/Night)**, **Vallis**, **Cambion**, **Archon Hunt**, **Sortie**, **Steel Path**, and **Baro Ki'Teer** timers. |
+| **`Alt + Right-Click`** | ** Dismiss Bubble** | Immediately closes the active speech bubble and returns the pet to Idle mode. |
 
-### 🎨 Shape-Shifting Visual Modes
+### Shape-Shifting Visual Modes
 - **🟢 Green Cyber-HUD Pill (`WF-AI`):** Idle mode (`0% CPU`) & Scanning/Listening wave animation.
 - **🟣 Purple Cephalon Crystal (`RIVEN`):** Evaluates Riven stats, weapon synergy (Crit/Status/Incarnon), harmless negatives, Left vs. Right reroll choice, and estimated Platinum range.
 - **🟡 Golden Orokin Void Eye (`RELIC`):** Reads all 1–4 Void Fissure rewards from left to right, fetches live **warframe.market** Platinum & Ducat prices, and highlights the best pick (`🏆 SEÇ: ...`).
@@ -102,11 +102,11 @@ sequenceDiagram
 
 # 🇹🇷 Türkçe Kullanım Kılavuzu
 
-Warframe oynarken ekrana küçük bir **Cephalon / HUD** olarak yerleşen, oyun dosyalarına veya RAM'ine hiç dokunmayan (**%0 Ban Riski**), ekran görüntüsünü ve sesini diske kaydetmeden (**%100 RAM-içi**) analiz eden yapay zeka asistanı.
+Warframe oynarken ekrana küçük bir **Cephalon / HUD** olarak yerleşen, oyun dosyalarına veya RAM'ine hiç dokunmayan, ekran görüntüsünü ve sesini diske kaydetmeden (**%100 RAM-içi**) analiz eden yapay zeka asistanı.
 
 ---
 
-## 🔑 Hangi Yapay Zeka API Anahtarı Gerekir? (Önemli)
+## Hangi Yapay Zeka API Anahtarı Gerekir? (Önemli)
 
 > [!IMPORTANT]
 > Bu uygulama hem görüntüyü hem sesli soruları hem de yapılandırılmış JSON çıktısını tek pakette ve en düşük gecikmeyle işleyebilmek için **Google Gemini Multimodal API** (`google-genai`) altyapısını kullanır.
@@ -116,24 +116,24 @@ Warframe oynarken ekrana küçük bir **Cephalon / HUD** olarak yerleşen, oyun 
 
 ---
 
-## ⌨️ Kısayollar ve Kontroller (Tam Liste)
+## Kısayollar ve Kontroller (Tam Liste)
 
 Asistanı kullanmak için **tek bir ana tuş (`F9`)** ve **tek bir etkileşim tuşu (`Alt`)** vardır:
 
 | Kısayol / Hareket | Ne İşe Yarar? | Detay |
 | :--- | :--- | :--- |
-| **`F9` (Bas-Çek)** | **🔍 Otomatik Ekran Analizi** | O an ekranda ne varsa (**Riven**, **Relic Ödülü** veya **Build/Modlama**) otomatik algılar, şekil değiştirir ve tavsiyesini verir. |
-| **`F9` (Basılı Tut + Konuş)** | **🎙️ Sesli Soru Sor (Bas-Konuş)** | Tuşa basılı tuttuğun sürece mikrofonunu dinler (`DİNLİYOR... 🎙`). Tuşu bıraktığında **Ekran Görüntüsü + Sesini** birlikte gönderir. *(Örn: "Kanka bu rivenı satayım mı reroll mu atayım?")* |
-| **`Alt + Sol Tık (Basılı Tutup Sürükle)`** | **✋ Pet'in Yerini Değiştir** | `Alt` tuşuna basılı tutarken Pet'i fareyle tutup ekranda istediğin köşeye sürükleyebilirsin. Bıraktığın yeri otomatik kaydeder. |
-| **`Alt + Sol Tık (Pet'in Üstüne Tek Tık)`** | **🌍 Canlı Dünya Durumu** | `Alt` basılıyken Pet'in üzerine tıklarsan **Cetus (Gece/Gündüz)**, **Vallis**, **Cambion**, **Archon**, **Sortie**, **Steel Path** ve **Baro Ki'Teer** durumunu açar/kapatır. |
-| **`Alt + Sağ Tık`** *(veya Balona Sol Tık)* | **❌ Cevap Balonunu Kapat** | Ekranda açık olan analiz/yazı balonunu beklemeden anında kapatır ve Pet'i uyku moduna alır. |
+| **`F9` (Bas-Çek)** | ** Otomatik Ekran Analizi** | O an ekranda ne varsa (**Riven**, **Relic Ödülü** veya **Build/Modlama**) otomatik algılar, şekil değiştirir ve tavsiyesini verir. |
+| **`F9` (Basılı Tut + Konuş)** | ** Sesli Soru Sor (Bas-Konuş)** | Tuşa basılı tuttuğun sürece mikrofonunu dinler (`DİNLİYOR... 🎙`). Tuşu bıraktığında **Ekran Görüntüsü + Sesini** birlikte gönderir. *(Örn: "Kanka bu rivenı satayım mı reroll mu atayım?")* |
+| **`Alt + Sol Tık (Basılı Tutup Sürükle)`** | ** Pet'in Yerini Değiştir** | `Alt` tuşuna basılı tutarken Pet'i fareyle tutup ekranda istediğin köşeye sürükleyebilirsin. Bıraktığın yeri otomatik kaydeder. |
+| **`Alt + Sol Tık (Pet'in Üstüne Tek Tık)`** | ** Canlı Dünya Durumu** | `Alt` basılıyken Pet'in üzerine tıklarsan **Cetus (Gece/Gündüz)**, **Vallis**, **Cambion**, **Archon**, **Sortie**, **Steel Path** ve **Baro Ki'Teer** durumunu açar/kapatır. |
+| **`Alt + Sağ Tık`** *(veya Balona Sol Tık)* | ** Cevap Balonunu Kapat** | Ekranda açık olan analiz/yazı balonunu beklemeden anında kapatır ve Pet'i uyku moduna alır. |
 
 > **👻 Hayalet Modu (Click-Through) Nedir?**
 > Normalde (`Alt` tuşuna basmıyorken) Pet tamamen **tıklama-geçirgendir**. Savaşın ortasında yanlışlıkla Pet'in veya yazı balonunun olduğu yere tıklasan bile fare tıklaman Pet'in içinden geçip doğrudan oyuna gider, oyunu alta atmaz! Sadece `Alt` tuşuna basılı tuttuğunda Pet'in etrafında ince kesikli bir çizgi belirir ve tıklanabilir olur.
 
 ---
 
-## 🎨 Pet'in Şekil ve Renk Anlamları
+## Pet'in Şekil ve Renk Anlamları
 
 1. **🟢 Yeşil Minimalist Kapsül (`WF-AI`):**
    - **Uyku Modu (Idle):** İşlemci ve ekran kartı tüketimi **%0**'dır. Kısayola basmanı bekler.
@@ -150,7 +150,7 @@ Asistanı kullanmak için **tek bir ana tuş (`F9`)** ve **tek bir etkileşim tu
 
 ---
 
-## ⚡ Kurulum ve Başlatma (Format Sonrası Dahil)
+## Kurulum ve Başlatma (Format Sonrası Dahil)
 
 1. **Oyunu Çerçevesiz Moda Al:** Warframe ayarlarından ekran modunu **Borderless Fullscreen (Çerçevesiz Tam Ekran)** yap.
 2. **Başlat (`WF-AI.exe` veya `setup_and_run.bat`):**
@@ -167,7 +167,7 @@ Asistanı kullanmak için **tek bir ana tuş (`F9`)** ve **tek bir etkileşim tu
 
 ---
 
-## ⚙️ Kısayol Tuşunu veya Ayarları Değiştirme (`config.json`)
+## Kısayol Tuşunu veya Ayarları Değiştirme (`config.json`)
 
 Kısayol tuşunu (`F9`) başka bir tuş yapmak istersen klasördeki **`config.json`** dosyasını Not Defteri ile açıp değiştirebilirsin:
 
@@ -189,7 +189,7 @@ Kısayol tuşunu (`F9`) başka bir tuş yapmak istersen klasördeki **`config.js
 
 ---
 
-## 📁 Project Structure / Proje Yapısı
+## Project Structure / Proje Yapısı
 
 ```text
 WF-AI/
@@ -215,7 +215,7 @@ WF-AI/
 
 ---
 
-## ⚖️ License & Legal Disclaimer / Yasal Uyarı
+## License & Legal Disclaimer / Yasal Uyarı
 
 - **License:** Distributed under the **[MIT License](LICENSE)**.
 - **Non-Affiliation & Trademarks:**
