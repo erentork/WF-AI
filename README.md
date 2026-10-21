@@ -15,15 +15,15 @@
 
 ## Key Technical Highlights (Portfolio Overview)
 
-- ** Complete Process Isolation:**
+- **Complete Process Isolation:**
   - Does **not** read or write game memory (`ReadProcessMemory`), inject DLLs, hook DirectX/OpenGL, or simulate inputs/macros.
   - Uses standard Windows Desktop Duplication / GDI screen capture (identical to OBS or Discord screen sharing) and the native OS `RegisterHotKey` API (no low-level `WH_KEYBOARD_LL` hooks).
-- ** 100% In-Memory Pipeline (Zero Disk Footprint):**
-  - Screenshots (`mss` / `Pillow` $\rightarrow$ `io.BytesIO` JPEG) and push-to-talk voice queries (`sounddevice` $\rightarrow$ `io.BytesIO` WAV) live strictly in RAM and are garbage-collected immediately after the API call. Nothing is ever saved to disk.
-- ** Native In-Process `WF-AI.exe` Host:**
+- **100% In-Memory Pipeline (Zero Disk Footprint):**
+  - Screenshots (`mss` / `Pillow` → `io.BytesIO` JPEG) and push-to-talk voice queries (`sounddevice` → `io.BytesIO` WAV) live strictly in RAM and are garbage-collected immediately after the API call. Nothing is ever saved to disk.
+- **Native In-Process `WF-AI.exe` Host:**
   - Compiled via a custom C#/.NET P/Invoke host (`src/build_exe.py`) that dynamically locates `python3XX.dll` from `.venv/pyvenv.cfg` and executes `Py_Main` **in-process**.
   - Runs as a single native process (**`WF-AI` / `WF-AI.exe`**) in Windows Task Manager with its own multi-resolution diamond icon (`assets/wf-ai.ico`)—no separate `python.exe` or `pythonw.exe` child processes.
-- ** Shape-Shifting 60 FPS Vector UI & 0% Idle CPU:**
+- **Shape-Shifting 60 FPS Vector UI & 0% Idle CPU:**
   - Hardware-independent custom `QPainter` vector animations (`PyQt6`) that completely stop their timer in Idle mode (**0.0% CPU / GPU impact on FPS**).
   - **Ghost Click-Through Mode (`WS_EX_TRANSPARENT`):** Mouse clicks pass straight through the overlay into the game during combat. Hold `Alt` to interact, drag, or open the live World State panel.
 
@@ -85,11 +85,11 @@ sequenceDiagram
 
 | Hotkey / Action | Function | Description |
 | :--- | :--- | :--- |
-| **`F9` (Tap)** | ** Auto-Detect & Analyze** | Captures your active game screen in RAM, auto-detects **Riven**, **Relic**, or **Build**, morphs the pet, and shows advice. |
-| **`F9` (Hold + Speak)** | ** Push-to-Talk Voice Query** | Listens to your microphone while held (`DİNLİYOR... 🎙`). On release, sends **Screenshot + Voice** together. |
-| **`Alt + Left-Drag`** | ** Move Overlay** | Hold `Alt` and drag the pet anywhere on any monitor. Position is saved automatically. |
-| **`Alt + Left-Click (on Pet)`** | ** Live World State** | Toggles live **Cetus (Day/Night)**, **Vallis**, **Cambion**, **Archon Hunt**, **Sortie**, **Steel Path**, and **Baro Ki'Teer** timers. |
-| **`Alt + Right-Click`** | ** Dismiss Bubble** | Immediately closes the active speech bubble and returns the pet to Idle mode. |
+| **`F9` (Tap)** | **Auto-Detect & Analyze** | Captures your active game screen in RAM, auto-detects **Riven**, **Relic**, or **Build**, morphs the pet, and shows advice. |
+| **`F9` (Hold + Speak)** | **Push-to-Talk Voice Query** | Listens to your microphone while held (`DİNLİYOR... 🎙`). On release, sends **Screenshot + Voice** together. |
+| **`Alt + Left-Drag`** | **Move Overlay** | Hold `Alt` and drag the pet anywhere on any monitor. Position is saved automatically. |
+| **`Alt + Left-Click (on Pet)`** | **Live World State** | Toggles live **Cetus (Day/Night)**, **Vallis**, **Cambion**, **Archon Hunt**, **Sortie**, **Steel Path**, and **Baro Ki'Teer** timers. |
+| **`Alt + Right-Click`** | **Dismiss Bubble** | Immediately closes the active speech bubble and returns the pet to Idle mode. |
 
 ### Shape-Shifting Visual Modes
 - **🟢 Green Cyber-HUD Pill (`WF-AI`):** Idle mode (`0% CPU`) & Scanning/Listening wave animation.
@@ -122,11 +122,11 @@ Asistanı kullanmak için **tek bir ana tuş (`F9`)** ve **tek bir etkileşim tu
 
 | Kısayol / Hareket | Ne İşe Yarar? | Detay |
 | :--- | :--- | :--- |
-| **`F9` (Bas-Çek)** | ** Otomatik Ekran Analizi** | O an ekranda ne varsa (**Riven**, **Relic Ödülü** veya **Build/Modlama**) otomatik algılar, şekil değiştirir ve tavsiyesini verir. |
-| **`F9` (Basılı Tut + Konuş)** | ** Sesli Soru Sor (Bas-Konuş)** | Tuşa basılı tuttuğun sürece mikrofonunu dinler (`DİNLİYOR... 🎙`). Tuşu bıraktığında **Ekran Görüntüsü + Sesini** birlikte gönderir. *(Örn: "Kanka bu rivenı satayım mı reroll mu atayım?")* |
-| **`Alt + Sol Tık (Basılı Tutup Sürükle)`** | ** Pet'in Yerini Değiştir** | `Alt` tuşuna basılı tutarken Pet'i fareyle tutup ekranda istediğin köşeye sürükleyebilirsin. Bıraktığın yeri otomatik kaydeder. |
-| **`Alt + Sol Tık (Pet'in Üstüne Tek Tık)`** | ** Canlı Dünya Durumu** | `Alt` basılıyken Pet'in üzerine tıklarsan **Cetus (Gece/Gündüz)**, **Vallis**, **Cambion**, **Archon**, **Sortie**, **Steel Path** ve **Baro Ki'Teer** durumunu açar/kapatır. |
-| **`Alt + Sağ Tık`** *(veya Balona Sol Tık)* | ** Cevap Balonunu Kapat** | Ekranda açık olan analiz/yazı balonunu beklemeden anında kapatır ve Pet'i uyku moduna alır. |
+| **`F9` (Bas-Çek)** | **Otomatik Ekran Analizi** | O an ekranda ne varsa (**Riven**, **Relic Ödülü** veya **Build/Modlama**) otomatik algılar, şekil değiştirir ve tavsiyesini verir. |
+| **`F9` (Basılı Tut + Konuş)** | **Sesli Soru Sor (Bas-Konuş)** | Tuşa basılı tuttuğun sürece mikrofonunu dinler (`DİNLİYOR... 🎙`). Tuşu bıraktığında **Ekran Görüntüsü + Sesini** birlikte gönderir. *(Örn: "Kanka bu rivenı satayım mı reroll mu atayım?")* |
+| **`Alt + Sol Tık (Basılı Tutup Sürükle)`** | **Pet'in Yerini Değiştir** | `Alt` tuşuna basılı tutarken Pet'i fareyle tutup ekranda istediğin köşeye sürükleyebilirsin. Bıraktığın yeri otomatik kaydeder. |
+| **`Alt + Sol Tık (Pet'in Üstüne Tek Tık)`** | **Canlı Dünya Durumu** | `Alt` basılıyken Pet'in üzerine tıklarsan **Cetus (Gece/Gündüz)**, **Vallis**, **Cambion**, **Archon**, **Sortie**, **Steel Path** ve **Baro Ki'Teer** durumunu açar/kapatır. |
+| **`Alt + Sağ Tık`** *(veya Balona Sol Tık)* | **Cevap Balonunu Kapat** | Ekranda açık olan analiz/yazı balonunu beklemeden anında kapatır ve Pet'i uyku moduna alır. |
 
 > **👻 Hayalet Modu (Click-Through) Nedir?**
 > Normalde (`Alt` tuşuna basmıyorken) Pet tamamen **tıklama-geçirgendir**. Savaşın ortasında yanlışlıkla Pet'in veya yazı balonunun olduğu yere tıklasan bile fare tıklaman Pet'in içinden geçip doğrudan oyuna gider, oyunu alta atmaz! Sadece `Alt` tuşuna basılı tuttuğunda Pet'in etrafında ince kesikli bir çizgi belirir ve tıklanabilir olur.
