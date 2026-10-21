@@ -1,4 +1,4 @@
-# 🥷 WF-AI — Warframe AI Overlay Assistant (Shapeshifter Cephalon)
+# WF-AI — Warframe AI Overlay Assistant (Shapeshifter Cephalon)
 
 <p align="center">
   <b><a href="#-english-documentation">🇬🇧 English Documentation</a></b> &nbsp;|&nbsp;
