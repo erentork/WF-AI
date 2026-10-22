@@ -8,6 +8,7 @@ import ctypes
 import html
 import sys
 import threading
+import time
 
 from PyQt6.QtCore import QObject, QPointF, Qt, pyqtSignal
 from PyQt6.QtGui import QAction, QColor, QIcon, QPainter, QPixmap, QPolygonF
@@ -50,6 +51,7 @@ class Controller(QObject):
         self.mic = MicRecorder()
 
         self._busy = False
+        self._busy_since = 0.0
         self._jpeg = None
 
         self.sig_state.connect(window.set_state)
@@ -75,31 +77,33 @@ class Controller(QObject):
 
     # ---------- hotkey callbacks (hotkey thread) ----------
     def _on_press(self):
-        if self._busy:
+        # Auto-unlock if a previous request somehow hung for >15s
+        if self._busy and (time.perf_counter() - self._busy_since < 15.0):
             return
         self._busy = True
+        self._busy_since = time.perf_counter()
         try:
             self._jpeg = grab_screen_jpeg(
                 int(self.cfg.get("monitor", 0)),
-                int(self.cfg.get("max_capture_width", 1920)),
-                int(self.cfg.get("jpeg_quality", 85)),
+                int(self.cfg.get("max_capture_width", 1366)),
+                int(self.cfg.get("jpeg_quality", 78)),
             )
         except Exception as e:
             self._jpeg = None
             self._busy = False
             self.sig_message.emit(f"Ekran yakalanamadı: {esc(e)}", "error", 8)
             return
-        self.mic.start()
         self.sig_state.emit("scan")
 
     def _on_hold(self):
         if self._jpeg is not None and self.mic.available:
+            self.mic.start()
             self.sig_state.emit("listen")
 
     def _on_release(self, held: bool):
         if self._jpeg is None:
             return
-        wav = self.mic.stop(keep=held)
+        wav = self.mic.stop(keep=True) if held else None
         jpeg, self._jpeg = self._jpeg, None
         self.sig_state.emit("scan")
         threading.Thread(target=self._analyze, args=(jpeg, wav), daemon=True).start()

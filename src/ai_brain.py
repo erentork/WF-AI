@@ -1,4 +1,5 @@
 """Gemini multimodal brain: screenshot (+ optional voice) -> auto-detected mode + advice."""
+from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeoutError
 import json
 import threading
 from typing import List, Optional
@@ -90,41 +91,54 @@ class AIBrain:
             task = "Ekran görüntüsü ekte. Ekranı sınıflandır ve analiz et."
         parts.append(types.Part.from_text(text=task))
 
-        gen_cfg = types.GenerateContentConfig(
-            system_instruction=SYSTEM_PROMPT,
-            response_mime_type="application/json",
-            response_schema=Analysis,
-            temperature=0.4,
-        )
         budget = self.cfg.get("thinking_budget")
-        if budget is not None:
-            gen_cfg.thinking_config = types.ThinkingConfig(thinking_budget=int(budget))
+        primary = self.cfg.get("model") or "gemini-3.5-flash"
+        if primary == "gemini-3.7-flash":
+            primary = "gemini-3.5-flash"  # 3.7-flash has 90s+ server latency
 
-        primary = self.cfg.get("model") or "gemini-3.7-flash"
         fallback_models = [
             primary,
-            "gemini-3.7-flash",
-            "gemini-3.6-flash",
             "gemini-3.5-flash",
+            "gemini-3.6-flash",
             "gemini-3.5-flash-lite",
+            "gemini-flash-lite-latest",
             "gemini-3.1-flash-lite",
             "gemini-3-flash-preview",
-            "gemini-flash-lite-latest",
         ]
-        # Keep order without duplicates
         models_to_try = list(dict.fromkeys(fallback_models))
 
         resp = None
         last_err = None
         for mdl in models_to_try:
+            gen_cfg = types.GenerateContentConfig(
+                system_instruction=SYSTEM_PROMPT,
+                response_mime_type="application/json",
+                response_schema=Analysis,
+                temperature=0.3,
+            )
+            # Only non-lite models support thinking_config; lite models reject it with 400
+            if "lite" not in mdl:
+                gen_cfg.thinking_config = types.ThinkingConfig(
+                    thinking_budget=0 if budget is None else int(budget)
+                )
+
+            ex = ThreadPoolExecutor(max_workers=1)
             try:
-                resp = client.models.generate_content(
+                fut = ex.submit(
+                    client.models.generate_content,
                     model=mdl,
                     contents=[types.Content(role="user", parts=parts)],
                     config=gen_cfg,
                 )
+                resp = fut.result(timeout=7.5)
+                ex.shutdown(wait=False, cancel_futures=True)
                 break
+            except FuturesTimeoutError:
+                ex.shutdown(wait=False, cancel_futures=True)
+                last_err = RuntimeError(f"{mdl} zaman aşımına uğradı (7.5sn)")
+                continue
             except Exception as e:
+                ex.shutdown(wait=False, cancel_futures=True)
                 last_err = e
                 emsg = str(e)
                 if any(code in emsg for code in ("429", "RESOURCE_EXHAUSTED", "404", "NOT_FOUND", "400", "INVALID_ARGUMENT", "503", "UNAVAILABLE")):

@@ -10,20 +10,21 @@ EXAMPLE_PATH = ROOT / "config.example.json"
 
 DEFAULTS = {
     "gemini_api_key": "",
-    "model": "gemini-3.7-flash",
-    "thinking_budget": None,
+    "model": "gemini-3.5-flash",
+    "thinking_budget": 0,
     "hotkey": "F9",
     "interact_key": "alt",
     "hold_threshold_ms": 350,
     "monitor": 0,
-    "max_capture_width": 1920,
-    "jpeg_quality": 85,
+    "max_capture_width": 1366,
+    "jpeg_quality": 78,
     "result_seconds": 25,
     "animations": True,
     "animation_fps": 30,
     "platform": "pc",
     "position": None,
 }
+
 
 def load() -> dict:
     if not CONFIG_PATH.exists() and EXAMPLE_PATH.exists():
